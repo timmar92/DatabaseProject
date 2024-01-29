@@ -124,14 +124,10 @@ public class UserService(AssignmentRepository assignmentRepository, CategoryRepo
                 var userAssignments = _assignmentRepository.GetAll(a => a.UserId == existingUser.UserId);
                 foreach (var assignment in userAssignments)
                 {
-                    var task = _taskRepository.GetOne(t => t.TaskId == assignment.TaskId);
-                    if (task != null)
-                    {
-                        _taskRepository.Delete(task);
-                    }
-                    _assignmentRepository.Delete(assignment);
+                    _taskRepository.Delete(task => task.TaskId == assignment.TaskId);
+                    _assignmentRepository.Delete(a => a.AssignmentId == assignment.AssignmentId);
                 }
-                _userRepository.Delete(existingUser);
+                _userRepository.Delete(user => user.UserId == existingUser.UserId);
                 return true;
             }
         }

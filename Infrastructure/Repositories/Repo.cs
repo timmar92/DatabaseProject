@@ -100,13 +100,17 @@ public abstract class Repo<TEntity, TContext>(TContext context) where TEntity : 
 
 
     //Delete
-    public virtual bool Delete(TEntity entity)
+    public virtual bool Delete(Expression<Func<TEntity, bool>> predicate)
     {
         try
         {
-            _context.Set<TEntity>().Remove(entity);
-            _context.SaveChanges();
-            return true;
+            var existingEntity = _context.Set<TEntity>().FirstOrDefault(predicate);
+            if (existingEntity != null)
+            {
+                _context.Set<TEntity>().Remove(existingEntity);
+                _context.SaveChanges();
+                return true;
+            }
         }
         catch (Exception ex) { Debug.WriteLine("ERROR :: " + ex.Message); }
         return false;

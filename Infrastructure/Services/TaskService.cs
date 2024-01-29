@@ -102,7 +102,7 @@ public class TaskService(AssignmentRepository assignmentRepository, CategoryRepo
             var existingTask = GetTaskByName(taskName);
             if (existingTask != null)
             {
-                _taskRepository.Delete(existingTask);
+                _taskRepository.Delete(task => task.TaskName == taskName);
                 return true;
             }
         }
