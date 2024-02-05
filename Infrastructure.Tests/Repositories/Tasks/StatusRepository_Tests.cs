@@ -147,5 +147,23 @@ public class StatusRepository_Tests
         Assert.True(result);
     }
 
+    [Fact]
+    public void DeleteStatus_ShouldNot_DeleteStatus_Then_ReturnFalse()
+    {
+        //arrange
+        var statusRepo = new StatusRepository(_context);
+        var statusEntity = new StatusEntity
+        {
+            StatusName = "Test Status",
+        };
+        statusEntity = statusRepo.Create(statusEntity);
+
+        //act
+        var result = statusRepo.Delete(x => x.StatusName == "Invalid Status");
+
+        //assert
+        Assert.False(result);
+    }
+
 
 }

@@ -128,8 +128,6 @@ public class UserRepository_Tests
         Assert.NotNull(result);
         Assert.Equal(userEntity.Name, result.Name);
         Assert.Equal(userEntity.Email, result.Email);
-
-
     }
 
     [Fact]
