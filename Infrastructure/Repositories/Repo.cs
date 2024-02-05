@@ -73,17 +73,6 @@ public abstract class Repo<TEntity, TContext>(TContext context) where TEntity : 
         return null!;
     }
 
-    public virtual bool Exists(Expression<Func<TEntity, bool>> predicate)
-    {
-        try
-        {
-            var result = _context.Set<TEntity>().Any(predicate);
-            return result;
-        }
-        catch (Exception ex) { Debug.WriteLine("ERROR :: " + ex.Message); }
-        return false;
-    }
-
 
     //Update
     public virtual TEntity Update(TEntity entity)

@@ -16,7 +16,8 @@ public class UserService(AssignmentRepository assignmentRepository, CategoryRepo
     {
         try
         {
-            if (!_userRepository.Exists(x => x.Email == entity.Email))
+            var existingUser = _userRepository.GetOne(x => x.Email == entity.Email);
+            if (existingUser == null)
             {
                 _userRepository.Create(entity);
                 return true;
