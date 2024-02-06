@@ -4,12 +4,10 @@ using System.Diagnostics;
 
 namespace Infrastructure.Services.ProductServices;
 
-public class PurchaseService(CategoryRepository categoryRepository, ProductRepository productRepository, CustomerRepository customerRepository, ManufacturerRepository manufacturerRepository, PurchaseRepository purchaseRepository)
+public class PurchaseService(ProductRepository productRepository, CustomerRepository customerRepository, PurchaseRepository purchaseRepository)
 {
-    private readonly CategoryRepository _categoryRepository = categoryRepository;
     private readonly ProductRepository _productRepository = productRepository;
     private readonly CustomerRepository _customerRepository = customerRepository;
-    private readonly ManufacturerRepository _manufacturerRepository = manufacturerRepository;
     private readonly PurchaseRepository _purchaseRepository = purchaseRepository;
 
 
@@ -21,7 +19,7 @@ public class PurchaseService(CategoryRepository categoryRepository, ProductRepos
             var customerEntity = _customerRepository.GetOne(x => x.CustomerId == customer.CustomerId);
             if (customerEntity == null)
             {
-                customerEntity = _customerRepository.Create(customer);
+                return false;
             }
 
             var productEntity = _productRepository.GetOne(x => x.ArticleNumber == product.ArticleNumber);

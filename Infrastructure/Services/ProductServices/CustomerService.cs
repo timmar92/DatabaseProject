@@ -4,21 +4,25 @@ using System.Diagnostics;
 
 namespace Infrastructure.Services.ProductServices;
 
-public class CustomerService(CategoryRepository categoryRepository, ProductRepository productRepository, CustomerRepository customerRepository, ManufacturerRepository manufacturerRepository, PurchaseRepository purchaseRepository)
+public class CustomerService(CustomerRepository customerRepository)
 {
-    private readonly CategoryRepository _categoryRepository = categoryRepository;
-    private readonly ProductRepository _productRepository = productRepository;
+
     private readonly CustomerRepository _customerRepository = customerRepository;
-    private readonly ManufacturerRepository _manufacturerRepository = manufacturerRepository;
-    private readonly PurchaseRepository _purchaseRepository = purchaseRepository;
+
 
 
     public bool AddCustomer(Customer customer)
     {
         try
         {
-            var customerEntity = _customerRepository.Create(customer);
-            return true;
+            if (customer.FirstName != "" && customer.LastName != "" && customer.Email != "")
+            {
+                var customerEntity = _customerRepository.Create(customer);
+                if (customerEntity != null)
+                {
+                    return true;
+                }
+            }
         }
         catch (Exception ex)
         {
@@ -52,7 +56,7 @@ public class CustomerService(CategoryRepository categoryRepository, ProductRepos
         {
             Debug.WriteLine("ERROR :: " + ex.Message);
         }
-        return null!;
+        return new List<Customer>();
     }
 
     public bool UpdateCustomer(Customer customer)

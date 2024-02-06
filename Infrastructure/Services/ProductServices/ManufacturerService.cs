@@ -1,5 +1,4 @@
 ﻿using Infrastructure.Entities.ProductCatalog;
-using Infrastructure.Repositories;
 using Infrastructure.Repositories.ProductRepositories;
 using System.Diagnostics;
 
@@ -13,10 +12,10 @@ public class ManufacturerService(ManufacturerRepository manufacturerRepository)
     {
         try
         {
-            var category = _manufacturerRepository.GetOne(x => x.ManufacturerName == manufacturerName);
-            if (category != null)
+            var manufacturer = _manufacturerRepository.GetOne(x => x.ManufacturerName == manufacturerName);
+            if (manufacturer != null)
             {
-                return category;
+                return manufacturer;
             }
         }
         catch (Exception ex)
@@ -30,8 +29,8 @@ public class ManufacturerService(ManufacturerRepository manufacturerRepository)
     {
         try
         {
-            var existingCategory = GetManufacturerByName(manufacturerName);
-            if (existingCategory != null)
+            var existingmanufacturer = GetManufacturerByName(manufacturerName);
+            if (existingmanufacturer != null)
             {
                 _manufacturerRepository.Delete(category => category.ManufacturerName == manufacturerName);
                 return true;

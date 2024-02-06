@@ -9,6 +9,29 @@ public class PurchaseRepository(ProductDbContext context) : Repo<Purchase, Produ
 {
     private readonly ProductDbContext _context = context;
 
+    public override Purchase Create(Purchase entity)
+    {
+        try
+        {
+            if (entity.ProductArticleNumber != null && entity.CustomerId != 0)
+            {
+                _context.Set<Purchase>().Add(entity);
+                _context.SaveChanges();
+                return entity;
+            }
+            else
+            {
+                return null!;
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine("ERROR :: " + ex.Message);
+        }
+        return null!;
+    }
+
     public override IEnumerable<Purchase> GetAll()
     {
         try
@@ -25,4 +48,5 @@ public class PurchaseRepository(ProductDbContext context) : Repo<Purchase, Produ
         catch (Exception ex) { Debug.WriteLine("ERROR :: " + ex.Message); }
         return null!;
     }
+
 }

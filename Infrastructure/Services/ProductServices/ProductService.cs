@@ -4,47 +4,50 @@ using System.Diagnostics;
 
 namespace Infrastructure.Services.ProductServices;
 
-public class ProductService(CategoryRepository categoryRepository, ProductRepository productRepository, CustomerRepository customerRepository, ManufacturerRepository manufacturerRepository, PurchaseRepository purchaseRepository)
+public class ProductService(CategoryRepository categoryRepository, ProductRepository productRepository, ManufacturerRepository manufacturerRepository)
 {
     private readonly CategoryRepository _categoryRepository = categoryRepository;
     private readonly ProductRepository _productRepository = productRepository;
-    private readonly CustomerRepository _customerRepository = customerRepository;
     private readonly ManufacturerRepository _manufacturerRepository = manufacturerRepository;
-    private readonly PurchaseRepository _purchaseRepository = purchaseRepository;
+
 
 
     public bool AddProduct(Product product, Manufacturer manufacturer, Category category)
     {
-
         try
         {
-            var categoryEntity = _categoryRepository.GetOne(x => x.CategoryName == category.CategoryName);
-            if (categoryEntity == null)
+            if (product.ArticleNumber != null && product.ProductName != null && product.Description != null && product.Price > 0
+                && !string.IsNullOrEmpty(category.CategoryName) && !string.IsNullOrEmpty(manufacturer.ManufacturerName))
             {
-                categoryEntity = _categoryRepository.Create(category);
-            }
+                var categoryEntity = _categoryRepository.GetOne(x => x.CategoryName == category.CategoryName);
+                if (categoryEntity == null)
+                {
+                    categoryEntity = _categoryRepository.Create(category);
+                }
 
-            var manufacturerEntity = _manufacturerRepository.GetOne(x => x.ManufacturerName == manufacturer.ManufacturerName);
-            if (manufacturerEntity == null)
+                var manufacturerEntity = _manufacturerRepository.GetOne(x => x.ManufacturerName == manufacturer.ManufacturerName);
+                if (manufacturerEntity == null)
+                {
+                    manufacturerEntity = _manufacturerRepository.Create(manufacturer);
+                }
+
+                product.CategoryId = categoryEntity.CategoryId;
+                product.ManufacturerId = manufacturerEntity.ManufacturerId;
+
+                var productEntity = _productRepository.Create(product);
+
+                return true;
+            }
+            else
             {
-                manufacturerEntity = _manufacturerRepository.Create(manufacturer);
+                return false;
             }
-
-            product.CategoryId = categoryEntity.CategoryId;
-            product.ManufacturerId = manufacturerEntity.ManufacturerId;
-
-            var productEntity = _productRepository.Create(product);
-
-            return true;
-
         }
         catch (Exception ex)
         {
             Debug.WriteLine("ERROR :: " + ex.Message);
         }
         return false;
-
-
     }
 
     public Product GetProductByArticleNumber(string articleNumber)
@@ -86,6 +89,10 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
             {
                 return categoryEntity.Products;
             }
+            else
+            {
+                return new List<Product>();
+            }
         }
         catch (Exception ex)
         {
@@ -102,6 +109,10 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
             if (manufacturerEntity != null)
             {
                 return manufacturerEntity.Products;
+            }
+            else
+            {
+                return new List<Product>();
             }
         }
         catch (Exception ex)
