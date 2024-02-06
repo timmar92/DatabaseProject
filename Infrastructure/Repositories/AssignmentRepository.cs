@@ -9,6 +9,29 @@ public class AssignmentRepository(TaskDbContext context) : Repo<AssignmentEntity
 {
     private readonly TaskDbContext _context = context;
 
+    public override AssignmentEntity Create(AssignmentEntity entity)
+    {
+        try
+        {
+            if (entity.UserId == 0 || entity.TaskId == 0)
+            {
+                return null!;
+            }
+            else
+            {
+                _context.Set<AssignmentEntity>().Add(entity);
+                _context.SaveChanges();
+                return entity;
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine("ERROR :: " + ex.Message);
+        }
+        return null!;
+    }
+
     public override IEnumerable<AssignmentEntity> GetAll()
     {
         try
