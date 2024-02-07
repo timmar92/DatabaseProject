@@ -265,7 +265,7 @@ public class MenuService(UserService userService, TaskService taskService, Assig
         Console.Clear();
 
         var products = _productService.GetAllProducts();
-        if (products == null)
+        if (products == null || !products.Any())
         {
             Console.WriteLine("There are no products in the database");
             Console.WriteLine("");
@@ -297,7 +297,7 @@ public class MenuService(UserService userService, TaskService taskService, Assig
     {
         Console.Clear();
 
-        Console.WriteLine("Enter the category of the products you want to see");
+        Console.WriteLine("Enter the category of the products you want to see or type 'exit' to go to main menu");
         var productCategory = Console.ReadLine()!;
         if (string.IsNullOrEmpty(productCategory))
         {
@@ -306,9 +306,13 @@ public class MenuService(UserService userService, TaskService taskService, Assig
             Console.ReadKey();
             ShowAllProductsByCategory();
         }
+        else if (productCategory.ToLower() == "exit")
+        {
+            ShowProductMenu();
+        }
 
         var products = _productService.GetProductsByCategory(productCategory);
-        if (products == null)
+        if (products == null || !products.Any())
         {
             Console.WriteLine("There are no products in the database");
             Console.WriteLine("");
@@ -341,7 +345,7 @@ public class MenuService(UserService userService, TaskService taskService, Assig
     {
         Console.Clear();
 
-        Console.WriteLine("Enter the manufacturer of the products you want to see");
+        Console.WriteLine("Enter the manufacturer of the products you want to see or type 'exit' to go to main menu");
         var productManufacturer = Console.ReadLine()!;
         if (string.IsNullOrEmpty(productManufacturer))
         {
@@ -350,9 +354,13 @@ public class MenuService(UserService userService, TaskService taskService, Assig
             Console.ReadKey();
             ShowAllProductsByManufacturer();
         }
+        else if (productManufacturer.ToLower() == "exit")
+        {
+            ShowProductMenu();
+        }
 
         var products = _productService.GetProductsByManufacturer(productManufacturer);
-        if (products == null)
+        if (products == null || !products.Any())
         {
             Console.WriteLine("There are no products in the database");
             Console.WriteLine("");
@@ -467,7 +475,7 @@ public class MenuService(UserService userService, TaskService taskService, Assig
         Console.Clear();
 
         var customers = _customerService.GetAllCustomers();
-        if (customers == null)
+        if (customers == null || !customers.Any())
         {
             Console.WriteLine("There are no customers in the database");
             Console.WriteLine("");
@@ -1597,7 +1605,7 @@ public class MenuService(UserService userService, TaskService taskService, Assig
     {
         Console.Clear();
 
-        Console.WriteLine("Enter user email");
+        Console.WriteLine("Enter user email or type 'exit' to go back to the main menu");
         var userEmail = Console.ReadLine()!;
         if (string.IsNullOrEmpty(userEmail))
         {
@@ -1605,6 +1613,11 @@ public class MenuService(UserService userService, TaskService taskService, Assig
             Console.WriteLine("Press any key to go back");
             Console.ReadKey();
             DeleteUserMenu();
+        }
+        else if (userEmail.ToLower() == "exit")
+        {
+            ShowMenu();
+            return;
         }
 
         var user = _userService.GetUserByEmail(userEmail);
@@ -1636,7 +1649,7 @@ public class MenuService(UserService userService, TaskService taskService, Assig
     {
         Console.Clear();
 
-        Console.WriteLine("Enter task name");
+        Console.WriteLine("Enter task name or type 'exit' to go back to the main menu");
         var taskName = Console.ReadLine()!;
         if (string.IsNullOrEmpty(taskName))
         {
@@ -1644,6 +1657,11 @@ public class MenuService(UserService userService, TaskService taskService, Assig
             Console.WriteLine("Press any key to go back");
             Console.ReadKey();
             DeleteTaskMenu();
+        }
+        else if (taskName.ToLower() == "exit")
+        {
+            ShowMenu();
+            return;
         }
 
         var task = _taskService.GetTaskByName(taskName);
